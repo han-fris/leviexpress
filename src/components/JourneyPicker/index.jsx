@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 import { CityOptions } from '../CityOptions';
+import { DateOptions } from '../DatesOptions';
 
 export const JourneyPicker = ({ onJourneyChange }) => {
   const [fromCity, setFromCity] = useState('Praha');
   const [toCity, setToCity] = useState('Liberec');
-  const [date, setDate] = useState('');
   const [cities, setCities] = useState([]);
+  const [date, setDate] = useState('');
+  const [dates, setDates] = useState([]);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -30,25 +32,12 @@ export const JourneyPicker = ({ onJourneyChange }) => {
       } else {
         const responseData = await response.json();
         console.log('vypis dates: ', responseData);
-        setDate(responseData.results);
+        setDates(responseData.results);
       }
     };
-
     fetchCities();
     fetchDates();
   }, []);
-
-  const handleFromCity = (e) => {
-    setFromCity(e.target.value);
-  };
-
-  const handleToCity = (e) => {
-    setToCity(e.target.value);
-  };
-
-  const handleDate = (e) => {
-    setDate(e.target.value);
-  };
 
   return (
     <div className="journey-picker container">
@@ -59,7 +48,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
           onSubmit={(e) => {
             e.preventDefault();
             console.log(
-              `Odesílám formulář s cestou z ${fromCity} do ${toCity}`,
+              `Odesílám formulář s cestou z ${fromCity} do ${toCity} dne ${date}`,
             );
           }}
         >
@@ -68,7 +57,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
             <select
               value={fromCity}
               onChange={(e) => {
-                handleFromCity(e);
+                setFromCity(e.target.value);
               }}
             >
               <option value="">Vyberte</option>
@@ -80,7 +69,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
             <select
               value={toCity}
               onChange={(e) => {
-                handleToCity(e);
+                setToCity(e.target.value);
               }}
             >
               <option value="">Vyberte</option>
@@ -89,13 +78,14 @@ export const JourneyPicker = ({ onJourneyChange }) => {
           </label>
           <label>
             <div className="journey-picker__label">Datum:</div>
-            <select>
+            <select
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+              }}
+            >
               <option value="">Vyberte</option>
-              <option value="datum01">Datum 01</option>
-              <option value="datum02">Datum 02</option>
-              <option value="datum03">Datum 03</option>
-              <option value="datum04">Datum 04</option>
-              <option value="datum05">Datum 05</option>
+              <DateOptions dates={dates} />
             </select>
           </label>
           <div className="journey-picker__controls">
