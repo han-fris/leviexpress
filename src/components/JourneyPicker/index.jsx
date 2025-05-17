@@ -4,8 +4,8 @@ import { CityOptions } from '../CityOptions';
 import { DateOptions } from '../DatesOptions';
 
 export const JourneyPicker = ({ onJourneyChange }) => {
-  const [fromCity, setFromCity] = useState('Praha');
-  const [toCity, setToCity] = useState('Liberec');
+  const [fromCity, setFromCity] = useState('');
+  const [toCity, setToCity] = useState('');
   const [cities, setCities] = useState([]);
   const [date, setDate] = useState('');
   const [dates, setDates] = useState([]);
@@ -19,7 +19,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
         console.log('nepovedlo se fetchCities');
       } else {
         const responseData = await response.json();
-        console.log('vypis mest: ', responseData);
+        //console.log('vypis mest: ', responseData);
         setCities(responseData.results);
       }
     };
@@ -31,13 +31,22 @@ export const JourneyPicker = ({ onJourneyChange }) => {
         console.log('nepovedlo se fetchDates');
       } else {
         const responseData = await response.json();
-        console.log('vypis dates: ', responseData);
+        //   console.log('vypis dates: ', responseData);
         setDates(responseData.results);
       }
     };
     fetchCities();
     fetchDates();
   }, []);
+
+  const handleSubmit = async () => {
+    const response = await fetch(
+      `https://apps.kodim.cz/daweb/leviexpress/api/journey?fromCity=${fromCity}&toCity=${toCity}&date=${date}`,
+    );
+    const responseData = await response.json();
+    const results = responseData.results;
+    onJourneyChange(results);
+  };
 
   return (
     <div className="journey-picker container">
@@ -89,7 +98,14 @@ export const JourneyPicker = ({ onJourneyChange }) => {
             </select>
           </label>
           <div className="journey-picker__controls">
-            <button className="btn" type="submit">
+            <button
+              className="btn"
+              type="submit"
+              disabled={!(fromCity && toCity && date)}
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
               Vyhledat spoj
             </button>
           </div>
