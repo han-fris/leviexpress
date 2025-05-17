@@ -27,7 +27,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
         'https://apps.kodim.cz/daweb/leviexpress/api/dates',
       );
       if (!response.ok) {
-        console.log('nepovedlo se fetchDates');
+        console.log('nepovedlo se fetchDates', response);
       } else {
         const responseData = await response.json();
         setDates(responseData.results);

@@ -13,18 +13,29 @@ export const HomePage = () => {
     setJourney(journeyData);
   };
 
-  const handleBuy = () => {
-    fetch('https://apps.kodim.cz/daweb/leviexpress/api/reservation', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  const handleBuy = async () => {
+    const response = await fetch(
+      'https://apps.kodim.cz/daweb/leviexpress/api/reservation',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'create',
+          seat: journey.autoSeat,
+          journeyId: journey.journeyId,
+        }),
       },
-      body: JSON.stringify({
-        action: 'create',
-        seat: journey.autoSeat,
-        journeyId: journey.journeyId,
-      }),
-    });
+    );
+    if (!response.ok) {
+      console.log('nepovedlo se handleBuy');
+      return;
+    }
+    const data = await response.json();
+    console.log('data jsou:', data);
+    const reservation = data.results;
+    navigate(`/reservation/${reservation.reservationId}`);
   };
 
   return (
@@ -34,14 +45,7 @@ export const HomePage = () => {
         {journey && <JourneyDetail journey={journey} />}
         {journey && <SelectedSeat number={journey.autoSeat} />}
         <div className="controls container">
-          <button
-            className="btn btn--big"
-            type="button"
-            onClick={() => {
-              handleBuy();
-              navigate(`/reservation/${journey.journeyId}`);
-            }}
-          >
+          <button className="btn btn--big" type="button" onClick={handleBuy}>
             Rezervovat
           </button>
         </div>
