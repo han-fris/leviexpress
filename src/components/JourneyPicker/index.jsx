@@ -54,9 +54,9 @@ export const JourneyPicker = ({ onJourneyChange }) => {
           className="journey-picker__form"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(
+            /* console.log(
               `Odesílám formulář s cestou z ${fromCity} do ${toCity} dne ${date}`,
-            );
+            );*/
           }}
         >
           <label>
