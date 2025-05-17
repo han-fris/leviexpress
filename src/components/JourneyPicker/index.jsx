@@ -19,7 +19,6 @@ export const JourneyPicker = ({ onJourneyChange }) => {
         console.log('nepovedlo se fetchCities');
       } else {
         const responseData = await response.json();
-        //console.log('vypis mest: ', responseData);
         setCities(responseData.results);
       }
     };
@@ -31,7 +30,6 @@ export const JourneyPicker = ({ onJourneyChange }) => {
         console.log('nepovedlo se fetchDates');
       } else {
         const responseData = await response.json();
-        //   console.log('vypis dates: ', responseData);
         setDates(responseData.results);
       }
     };
